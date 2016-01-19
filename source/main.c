@@ -890,7 +890,7 @@ int main() {
 	consoleInit(GFX_BOTTOM, NULL);
 
 
-	printf("BootNTR 2.4\n");
+	printf("BootNTR 3.2\n");
 	ntrConfig = &g_ntrConfig;
 	bnConfig = &g_bnConfig;
 	ret = bnBootNTR();
@@ -898,29 +898,30 @@ int main() {
 		printf("NTR CFW loaded successfully\n");
 		svcSleepThread(1000000000);
 		isSuccess = 1;
+		printf("Exit...\n");
 	} else {
 		printf("bnBootNTR failed\n");
-	}
-	printf("Press Home button to return to the menu.\n");
-
-	// Main loop
-	while (aptMainLoop())
-	{
-		hidScanInput();
-
-		u32 kDown = hidKeysDown();
-
-		if (kDown & KEY_START) {
-			break; // break in order to return to hbmenu
-		}
+		printf("Press Home button to return to the menu.\n");
 		
-		// Flush and swap framebuffers
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
+		// Main loop
+		while (aptMainLoop())
+		{
+			hidScanInput();
+
+			u32 kDown = hidKeysDown();
+
+			if (kDown & KEY_START) {
+				break; // break in order to return to hbmenu
+			}
+			
+			// Flush and swap framebuffers
+			gfxFlushBuffers();
+			gfxSwapBuffers();
+			gspWaitForVBlank();
+		}
 	}
-
-
+	
+	
 	gfxExit();
 	return 0;
 }
