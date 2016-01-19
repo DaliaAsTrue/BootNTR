@@ -329,6 +329,16 @@ Result bnInitParamsByHomeMenu() {
 	svc_closeHandle(hProcess);
 	t = *(u32*)(tmpBuffer);
 	printf("0x00200000 in HomeMenu: %08x\n", t);
+
+	if (t == 0xe1a00006) {
+		// new 3ds 10.4 usa
+		ntrConfig->HomeMenuVersion = SYSTEM_VERSION(10, 4, 0);
+		ntrConfig->HomeMenuInjectAddr = 0x12ded0;
+		ntrConfig->HomeFSReadAddr = 0x12c19c;
+		ntrConfig->HomeCardUpdateInitAddr = 0x118d78;
+		ntrConfig->HomeFSUHandleAddr = 0x32dfa4;
+		ntrConfig->HomeAptStartAppletAddr = 0x12ea08;
+	}
 	
 	if (t == 0xea00001f ) {
 		// new 3ds 10.4 eur
