@@ -306,6 +306,12 @@ void bnInitParamsByFirmware() {
 			bnConfig->FSPatchAddr = 0x0010EED4;
 			bnConfig->SMPatchAddr = 0x0010189C;
 		}
+		
+		if (kernelVersion == SYSTEM_VERSION(2, 50, 11)) {
+			// new3ds 10.4
+			//TODO: add new3ds 10.4 firmware support
+			ntrConfig->firmVersion = SYSTEM_VERSION(10, 4, 0);
+		}
 	}
 	bnConfig->requireKernelHax = 0;
 }
@@ -322,6 +328,9 @@ Result bnInitParamsByHomeMenu() {
 	flushDataCache();
 	*(u32*)(tmpBuffer) = 0;
 	ret = copyRemoteMemory(CURRENT_PROCESS_HANDLE, tmpBuffer, hProcess, (void*)0x00200000, 4);
+	svc_sleepThread(500000000);
+	ret = copyRemoteMemory(CURRENT_PROCESS_HANDLE, tmpBuffer, hProcess, (void*)0x00200000, 4);
+	svc_sleepThread(500000000);
 	if (ret != 0) {
 		printf("copyRemoteMemory failed:%08x\n", ret);
 		return ret;
@@ -329,7 +338,7 @@ Result bnInitParamsByHomeMenu() {
 	svc_closeHandle(hProcess);
 	t = *(u32*)(tmpBuffer);
 	printf("0x00200000 in HomeMenu: %08x\n", t);
-
+	
 	if (t == 0xea00001f ) { 
 		// new 3ds 10.4 jpn
 		ntrConfig->HomeMenuVersion = SYSTEM_VERSION(10, 4, 0);
@@ -920,7 +929,7 @@ int main() {
 	consoleInit(GFX_BOTTOM, NULL);
 
 
-	printf("BootNTR 3.2\n");
+	printf("BootNTR 3.3\n");
 	ntrConfig = &g_ntrConfig;
 	bnConfig = &g_bnConfig;
 	ret = bnBootNTR();
